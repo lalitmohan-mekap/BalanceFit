@@ -128,7 +128,7 @@ You’re free to use, modify, and distribute it with attribution.
 ## 👨‍💻 Author
 
 **BalanceFit**
-Developed by **[Lalit MOhan Mekap]**
+Developed by **[Lalit Mohan Mekap]**
 🔗 GitHub: [@lalitmohan-mekap](https://github.com/lalitmohan-mekap)
 🌐 Live Demo: [https://balancefit-api.onrender.com](https://balancefit-api.onrender.com)
 
