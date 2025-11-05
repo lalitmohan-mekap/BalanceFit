@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BalanceFit - Fitness Tracker</title>
+  <!-- Tailwind (CDN) -->
+  <!-- Google AdSense -->
+  <!-- SERVER_INJECT:ADSENSE_SCRIPT -->
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .gradient-text { background: linear-gradient(to right, #6EE7B7, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .toast { transition: opacity 0.3s, transform 0.3s; }
+    /* Calendar grid helper (avoid Tailwind @apply in <style>) */
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.5rem; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <!-- Main Container -->
+  <div class="container mx-auto max-w-4xl p-4 sm:p-6 md:p-8 relative">
+
+    <!-- History Button -->
+    <div class="absolute top-4 right-4">
+      <button id="history-btn" class="text-slate-500 hover:text-sky-500 p-2 rounded-full bg-white shadow-md hover:shadow-lg transition" aria-label="Open history calendar">
+        <i data-lucide="calendar-days" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- Header -->
+    <header class="text-center mb-6">
+      <h1 class="text-4xl md:text-5xl font-bold gradient-text">BalanceFit</h1>
+      <p class="text-slate-500 mt-2">Your daily partner in wellness.</p>
+    </header>
+
+    <!-- Date Display -->
+    <div id="date-display-container" class="text-center mb-4">
+      <h2 id="date-display" class="text-xl font-semibold text-slate-700">Today</h2>
+      <button id="go-to-today-btn" class="text-sm text-sky-600 hover:underline hidden" type="button">Back to Today</button>
+    </div>
+
+
+    <!-- Ad: Advertisement -->
+    <div class="my-6 flex justify-center">
+      <div class="w-full max-w-4xl">
+        <div class="text-center text-[10px] uppercase tracking-widest text-slate-400 mb-1">Advertisement</div>
+        <div class="bg-white rounded-xl shadow-sm p-2 border border-slate-100 ">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+               data-ad-slot="0000000001"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      </div>
+    </div>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+        <!-- Goals Panel (resets every day) -->
+    <section class="bg-white p-4 md:p-5 rounded-2xl shadow-md mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg md:text-xl font-bold text-slate-700 flex items-center gap-2">
+          <i data-lucide="target" class="w-5 h-5 text-emerald-600"></i>
+          Today's Goals
+        </h3>
+        <span class="text-xs md:text-sm text-slate-400">Resets daily</span>
+      </div>
+      <form id="goals-form" class="grid grid-cols-2 md:grid-cols-8 gap-3">
+        <!-- Calories -->
+        <label class="col-span-2 md:col-span-2 flex flex-col">
+          <span class="text-xs text-slate-500 mb-1">Calories (kcal)</span>
+          <input id="goal-cal" type="number" min="0" class="p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+        </label>
+        <!-- Protein -->
+        <label class="col-span-1 md:col-span-2 flex flex-col">
+          <span class="text-xs text-slate-500 mb-1">Protein (g)</span>
+          <input id="goal-protein" type="number" min="0" class="p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+        </label>
+        <!-- Carbs -->
+        <label class="col-span-1 md:col-span-2 flex flex-col">
+          <span class="text-xs text-slate-500 mb-1">Carbs (g)</span>
+          <input id="goal-carbs" type="number" min="0" class="p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+        </label>
+        <!-- Fat -->
+        <label class="col-span-1 md:col-span-2 flex flex-col">
+          <span class="text-xs text-slate-500 mb-1">Fat (g)</span>
+          <input id="goal-fat" type="number" min="0" class="p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none" />
+        </label>
+        <div class="col-span-2 md:col-span-2 flex items-end">
+          <button type="submit" class="w-full md:w-auto bg-emerald-500 text-white font-semibold px-5 py-2.5 rounded-lg hover:bg-emerald-600 transition shadow-sm hover:shadow-md flex items-center justify-center">
+            <i data-lucide="save" class="w-4 h-4 mr-2"></i> Save for Today
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <!-- Calories In -->
+      <div class="bg-white p-6 rounded-2xl shadow-md text-center">
+        <h2 class="text-lg font-semibold text-slate-600 mb-2">Calories In</h2>
+        <p id="calories-in" class="text-4xl font-bold text-emerald-500">0</p>
+        <p class="text-slate-400">kcal</p>
+      </div>
+      <!-- Calories Out -->
+      <div class="bg-white p-6 rounded-2xl shadow-md text-center">
+        <h2 class="text-lg font-semibold text-slate-600 mb-2">Calories Out</h2>
+        <p id="calories-out" class="text-4xl font-bold text-sky-500">0</p>
+        <p class="text-slate-400">kcal</p>
+      </div>
+      <!-- Net Balance -->
+      <div class="bg-white p-6 rounded-2xl shadow-md text-center flex flex-col items-center justify-center">
+        <h2 class="text-lg font-semibold text-slate-600 mb-2">Net Balance</h2>
+        <p id="net-calories" class="text-4xl font-bold text-amber-500">0</p>
+        <p class="text-slate-400">kcal</p>
+      </div>
+    </section>
+
+    <!-- Macro Bars -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white p-5 rounded-2xl shadow-md">
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="font-semibold text-slate-600">Protein</h4>
+          <span id="protein-summary" class="text-sm text-slate-400">0 / 0 g</span>
+        </div>
+        <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+          <div id="protein-bar" class="h-3 bg-emerald-500" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl shadow-md">
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="font-semibold text-slate-600">Carbs</h4>
+          <span id="carbs-summary" class="text-sm text-slate-400">0 / 0 g</span>
+        </div>
+        <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+          <div id="carbs-bar" class="h-3 bg-sky-500" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl shadow-md">
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="font-semibold text-slate-600">Fat</h4>
+          <span id="fat-summary" class="text-sm text-slate-400">0 / 0 g</span>
+        </div>
+        <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+          <div id="fat-bar" class="h-3 bg-amber-500" style="width:0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ad: Advertisement -->
+    <div class="my-6 flex justify-center">
+      <div class="w-full max-w-4xl">
+        <div class="text-center text-[10px] uppercase tracking-widest text-slate-400 mb-1">Advertisement</div>
+        <div class="bg-white rounded-xl shadow-sm p-2 border border-slate-100 ">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+               data-ad-slot="0000000002"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      </div>
+    </div>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    
+
+    <!-- Logging Section -->
+    <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Food Log -->
+      <div class="bg-white p-6 rounded-2xl shadow-md">
+        <h3 class="text-2xl font-bold mb-4 text-emerald-600">Food Log</h3>
+        <form id="food-form" class="flex flex-col sm:flex-row gap-3 mb-4" autocomplete="off">
+          <input type="text" id="food-input" placeholder="e.g., 1 apple and 2 eggs" required class="flex-grow p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none transition" />
+          <button type="submit" class="bg-emerald-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-emerald-600 transition shadow-sm hover:shadow-md flex items-center justify-center min-w-[140px]">
+            <span class="btn-text">Add Food</span>
+            <svg class="animate-spin h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+          </button>
+        </form>
+        <ul id="food-list" class="space-y-3"></ul>
+      </div>
+
+      <!-- Exercise Log -->
+      <div class="bg-white p-6 rounded-2xl shadow-md">
+        <h3 class="text-2xl font-bold mb-4 text-sky-600">Exercise Log</h3>
+        <form id="exercise-form" class="flex flex-col sm:flex-row gap-3 mb-4" autocomplete="off">
+          <input type="text" id="exercise-input" placeholder="e.g., ran for 30 minutes" required class="flex-grow p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-sky-400 focus:outline-none transition" />
+          <button type="submit" class="bg-sky-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-sky-600 transition shadow-sm hover:shadow-md flex items-center justify-center min-w-[160px]">
+            <span class="btn-text">Add Workout</span>
+            <svg class="animate-spin h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+          </button>
+        </form>
+        <ul id="exercise-list" class="space-y-3"></ul>
+      </div>
+    </main>
+
+    <!-- Suggestions -->
+    <section id="suggestions" class="bg-white mt-8 p-6 rounded-2xl shadow-md">
+      <h3 class="text-2xl font-bold mb-4 text-amber-600">Today's Suggestions</h3>
+      <div id="suggestion-content" class="text-slate-600 space-y-2">
+        <p>Log your first meal or workout to get personalized suggestions!</p>
+      </div>
+    </section>
+
+    <!-- Ad: Advertisement -->
+    <div class="my-6 flex justify-center">
+      <div class="w-full max-w-4xl">
+        <div class="text-center text-[10px] uppercase tracking-widest text-slate-400 mb-1">Advertisement</div>
+        <div class="bg-white rounded-xl shadow-sm p-2 border border-slate-100 ">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+               data-ad-slot="0000000003"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      </div>
+    </div>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+      </div>
+
+  <!-- History Modal -->
+  <div id="history-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg">
+      <div class="flex items-center justify-between mb-4">
+        <button id="prev-month-btn" class="p-2 rounded-full hover:bg-slate-100" type="button" aria-label="Previous month">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <h2 id="month-year-display" class="text-lg font-bold"></h2>
+        <button id="next-month-btn" class="p-2 rounded-full hover:bg-slate-100" type="button" aria-label="Next month">
+          <i data-lucide="chevron-right"></i>
+        </button>
+      </div>
+      <div class="grid grid-cols-7 gap-2 mb-4 text-center text-xs text-slate-500 font-semibold">
+        <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+      </div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+      <button id="close-history-btn" class="mt-4 w-full bg-slate-200 text-slate-700 font-semibold py-3 rounded-lg hover:bg-slate-300 transition" type="button">Close</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast fixed bottom-5 right-5 bg-red-500 text-white py-3 px-6 rounded-lg shadow-xl opacity-0 translate-y-10">
+    <p id="toast-message"></p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // ----------------------- STATE -----------------------
+      let foodLog = [];
+      let exerciseLog = [];
+      let history = {};
+      let viewedDate = new Date();
+      let calendarDate = new Date();
+      let goals = null; // per-day goals
+
+      // ----------------------- DOM -----------------------
+      const foodForm = document.getElementById('food-form');
+      const foodInput = document.getElementById('food-input');
+      const foodList = document.getElementById('food-list');
+      const exerciseForm = document.getElementById('exercise-form');
+      const exerciseInput = document.getElementById('exercise-input');
+      const exerciseList = document.getElementById('exercise-list');
+      const caloriesInEl = document.getElementById('calories-in');
+      const caloriesOutEl = document.getElementById('calories-out');
+      const netCaloriesEl = document.getElementById('net-calories');
+      const suggestionContent = document.getElementById('suggestion-content');
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      const dateDisplay = document.getElementById('date-display');
+      const goToTodayBtn = document.getElementById('go-to-today-btn');
+
+      // Goals elements
+      const goalsForm = document.getElementById('goals-form');
+      const goalCalInput = document.getElementById('goal-cal');
+      const goalProteinInput = document.getElementById('goal-protein');
+      const goalCarbsInput = document.getElementById('goal-carbs');
+      const goalFatInput = document.getElementById('goal-fat');
+
+      // Macro bar elements
+      const proteinBar = document.getElementById('protein-bar');
+      const carbsBar = document.getElementById('carbs-bar');
+      const fatBar = document.getElementById('fat-bar');
+      const proteinSummary = document.getElementById('protein-summary');
+      const carbsSummary = document.getElementById('carbs-summary');
+      const fatSummary = document.getElementById('fat-summary');
+
+      // History Modal
+      const historyBtn = document.getElementById('history-btn');
+      const historyModal = document.getElementById('history-modal');
+      const closeHistoryBtn = document.getElementById('close-history-btn');
+      const prevMonthBtn = document.getElementById('prev-month-btn');
+      const nextMonthBtn = document.getElementById('next-month-btn');
+      const monthYearDisplay = document.getElementById('month-year-display');
+      const calendarGrid = document.getElementById('calendar-grid');
+
+      // ----------------------- DATE UTILS -----------------------
+      const toISODateString = (date) => new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+      const isSameDay = (d1, d2) => toISODateString(d1) === toISODateString(d2);
+
+      // ----------------------- UI HELPERS -----------------------
+      const showToast = (message, isError = true) => {
+        toastMessage.textContent = message;
+        toast.className = `toast fixed bottom-5 right-5 text-white py-3 px-6 rounded-lg shadow-xl opacity-0 translate-y-10 ${isError ? 'bg-red-500' : 'bg-green-500'}`;
+        void toast.offsetWidth; // force reflow to restart transition
+        toast.classList.remove('opacity-0', 'translate-y-10');
+        setTimeout(() => toast.classList.add('opacity-0', 'translate-y-10'), 3000);
+      };
+
+      const toggleLoading = (form, isLoading) => {
+        const button = form.querySelector('button[type="submit"]');
+        const btnText = button.querySelector('.btn-text');
+        const btnSpinner = button.querySelector('.btn-spinner');
+        if (!button) return; // goals form has no spinner/text
+        button.disabled = isLoading;
+        if (btnText && btnSpinner) {
+          btnText.classList.toggle('hidden', isLoading);
+          btnSpinner.classList.toggle('hidden', !isLoading);
+        }
+      };
+
+      // ----------------------- STORAGE -----------------------
+      const getDefaultGoals = () => ({ cal: 2000, protein: 120, carbs: 250, fat: 70 });
+
+      const saveState = () => {
+        const todayStr = toISODateString(new Date());
+        // Persist per-day logs and goals only for the date they belong to
+        const vStr = toISODateString(viewedDate);
+        history[vStr] = { foodLog, exerciseLog, goals };
+        // Cleanup empty days
+        if ((!foodLog.length && !exerciseLog.length) && (!goals || Object.values(goals).every(v => v === null))) {
+          delete history[vStr];
+        }
+        localStorage.setItem('balanceFitHistory', JSON.stringify(history));
+      };
+
+      const loadState = () => {
+        try { history = JSON.parse(localStorage.getItem('balanceFitHistory')) || {}; }
+        catch { history = {}; }
+        loadDataForDate(new Date());
+      };
+
+      const loadDataForDate = (date) => {
+        viewedDate = date;
+        const dateStr = toISODateString(date);
+        const data = history[dateStr] || { foodLog: [], exerciseLog: [], goals: null };
+        foodLog = data.foodLog || [];
+        exerciseLog = data.exerciseLog || [];
+        // If no goals saved for this day, start with defaults for *that day* (daily reset behavior)
+        goals = data.goals || getDefaultGoals();
+        updateGoalsForm();
+        updateDateDisplay();
+        toggleFormsActive();
+        renderLogs();
+      };
+
+      // ----------------------- API -----------------------
+      const fetchNutritionixData = async (endpoint, query) => {
+        try {
+          const res = await fetch(`/api/nx/natural/${endpoint}` , {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query })
+          });
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || `API request failed (${res.status})`);
+          }
+          return await res.json();
+        } catch (e) {
+          showToast(e.message || 'Network error');
+          return null;
+        }
+      };
+
+      // ----------------------- RENDER -----------------------
+      const renderLogs = () => {
+        foodList.innerHTML = '';
+        exerciseList.innerHTML = '';
+        foodLog.forEach(item => foodList.appendChild(createLogItem(item, 'food')));
+        exerciseLog.forEach(item => exerciseList.appendChild(createLogItem(item, 'exercise')));
+        updateDashboard();
+        updateMacroBars();
+        updateSuggestions();
+        if (isSameDay(viewedDate, new Date())) saveState();
+        window.lucide && window.lucide.createIcons();
+      };
+
+      const createLogItem = (item, type) => {
+        const li = document.createElement('li');
+        li.className = `flex items-center justify-between p-3 rounded-lg transition-all ${type === 'food' ? 'bg-emerald-50' : 'bg-sky-50'}`;
+        li.dataset.id = item.id;
+
+        const canDelete = isSameDay(viewedDate, new Date());
+        li.innerHTML = `
+          <div class="flex-grow">
+            <p class="font-semibold capitalize">${item.name}</p>
+            ${type === 'food' ? `<p class="text-xs text-slate-500 mt-0.5">P ${Math.round(item.protein || 0)}g · C ${Math.round(item.carbs || 0)}g · F ${Math.round(item.fat || 0)}g</p>` : ''}
+          </div>
+          <div class="text-right mr-4">
+            <p class="font-bold text-lg ${type === 'food' ? 'text-emerald-600' : 'text-sky-600'}">${Math.round(item.calories)}</p>
+            <p class="text-xs text-slate-400">kcal</p>
+          </div>
+          ${canDelete ? `<button data-action="delete" data-type="${type}" class="text-slate-500 hover:text-red-500 p-1" aria-label="Delete entry"><i data-lucide="trash-2" class="w-5 h-5"></i></button>` : ''}
+        `;
+        return li;
+      };
+
+      const totals = () => {
+        const totalIn = foodLog.reduce((s, x) => s + (x.calories || 0), 0);
+        const totalOut = exerciseLog.reduce((s, x) => s + (x.calories || 0), 0);
+        const p = foodLog.reduce((s, x) => s + (x.protein || 0), 0);
+        const c = foodLog.reduce((s, x) => s + (x.carbs || 0), 0);
+        const f = foodLog.reduce((s, x) => s + (x.fat || 0), 0);
+        return { totalIn, totalOut, p, c, f };
+      };
+
+      const updateDashboard = () => {
+        const { totalIn, totalOut } = totals();
+        caloriesInEl.textContent = Math.round(totalIn);
+        caloriesOutEl.textContent = Math.round(totalOut);
+        netCaloriesEl.textContent = Math.round(totalIn - totalOut);
+      };
+
+      const clamp01 = (n) => Math.max(0, Math.min(1, n));
+
+      const updateMacroBars = () => {
+        const { p, c, f } = totals();
+        const g = goals || getDefaultGoals();
+        const pPct = g.protein ? clamp01(p / g.protein) * 100 : 0;
+        const cPct = g.carbs ? clamp01(c / g.carbs) * 100 : 0;
+        const fPct = g.fat ? clamp01(f / g.fat) * 100 : 0;
+        proteinBar.style.width = `${pPct}%`;
+        carbsBar.style.width = `${cPct}%`;
+        fatBar.style.width = `${fPct}%`;
+        proteinSummary.textContent = `${Math.round(p)} / ${g.protein || 0} g`;
+        carbsSummary.textContent   = `${Math.round(c)} / ${g.carbs || 0} g`;
+        fatSummary.textContent     = `${Math.round(f)} / ${g.fat || 0} g`;
+      };
+
+      const updateSuggestions = () => {
+        const { totalIn, totalOut, p, c, f } = totals();
+        const g = goals || getDefaultGoals();
+
+        if (!foodLog.length && !exerciseLog.length) {
+          suggestionContent.innerHTML = `<p>No data for this day. Log your first meal or workout on the current day to get personalized suggestions!</p>`;
+          return;
+        }
+
+        const picks = new Set();
+        const net = totalIn - totalOut;
+
+        const highSurplus = [
+          "You're in a significant calorie surplus. A brisk 30-minute walk could help balance your day.",
+          "Consider a lighter dinner to balance your calorie intake. A soup or a large salad are great options.",
+        ];
+        const lowDeficit = [
+          "Your calorie intake seems low. A healthy snack like an apple with peanut butter can provide a great energy boost.",
+          "Don't forget to fuel your body! A nutrient-dense meal is important, especially if you've been active.",
+        ];
+        const macroHints = [];
+        if (g.protein && p < 0.6 * g.protein) macroHints.push("You're below 60% of your protein goal — consider eggs, yogurt, paneer, or lentils.");
+        if (g.carbs && c < 0.5 * g.carbs)   macroHints.push("Carbs are low — oats, rice, fruit, or whole wheat roti can help.");
+        if (g.fat && f < 0.5 * g.fat)       macroHints.push("Healthy fats are low — try nuts, olive oil, or avocado.");
+
+        if (net > 400) picks.add(highSurplus[Math.floor(Math.random() * highSurplus.length)]);
+        else if (net < -400 && totalIn > 0) picks.add(lowDeficit[Math.floor(Math.random() * lowDeficit.length)]);
+
+        macroHints.forEach(h => picks.add(h));
+        if (!picks.size) picks.add("You're balanced against today's goals. Nice work!");
+
+        suggestionContent.innerHTML = Array.from(picks).map(s => `
+          <p class="flex items-start">
+            <i data-lucide="lightbulb" class="w-5 h-5 mr-2 text-amber-500 flex-shrink-0 mt-1"></i>
+            <span>${s}</span>
+          </p>`).join('');
+        window.lucide && window.lucide.createIcons();
+      };
+
+      const updateDateDisplay = () => {
+        if (isSameDay(viewedDate, new Date())) {
+          dateDisplay.textContent = 'Today';
+          goToTodayBtn.classList.add('hidden');
+        } else {
+          dateDisplay.textContent = viewedDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+          goToTodayBtn.classList.remove('hidden');
+        }
+      };
+
+      const toggleFormsActive = () => {
+        const isToday = isSameDay(viewedDate, new Date());
+        [foodInput, exerciseInput].forEach((input) => {
+          input.disabled = !isToday;
+          input.placeholder = !isToday ? 'Can only log on current day' : (input.id === 'food-input' ? 'e.g., 1 apple and 2 eggs' : 'e.g., ran for 30 minutes');
+          input.parentElement.classList.toggle('opacity-50', !isToday);
+          input.parentElement.classList.toggle('cursor-not-allowed', !isToday);
+        });
+        const foodBtn = foodForm.querySelector('button');
+        const exBtn = exerciseForm.querySelector('button');
+        if (foodBtn) foodBtn.disabled = !isToday;
+        if (exBtn) exBtn.disabled = !isToday;
+        // Goals are editable only for today to avoid confusion
+        [goalCalInput, goalProteinInput, goalCarbsInput, goalFatInput].forEach(el => { el.disabled = !isToday; });
+        goalsForm.querySelector('button').disabled = !isToday;
+        goalsForm.classList.toggle('opacity-50', !isToday);
+      };
+
+      const renderCalendar = () => {
+        calendarGrid.innerHTML = '';
+        const year = calendarDate.getFullYear();
+        const month = calendarDate.getMonth();
+        monthYearDisplay.textContent = `${calendarDate.toLocaleString('default', { month: 'long' })} ${year}`;
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 0; i < firstDay; i++) calendarGrid.insertAdjacentHTML('beforeend', '<div></div>');
+
+        for (let day = 1; day <= daysInMonth; day++) {
+          const date = new Date(year, month, day);
+          const dateStr = toISODateString(date);
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'text-center p-2 rounded-full cursor-pointer hover:bg-sky-100 transition-colors'
+            + (history[dateStr] ? ' bg-emerald-200 text-emerald-800 font-semibold' : '')
+            + (isSameDay(date, new Date()) ? ' border-2 border-amber-500 font-bold' : '')
+            + (isSameDay(date, viewedDate) ? ' bg-sky-500 text-white font-bold' : '');
+          btn.textContent = day;
+          btn.dataset.date = dateStr;
+          calendarGrid.appendChild(btn);
+        }
+        window.lucide && window.lucide.createIcons();
+      };
+
+      // ----------------------- GOALS -----------------------
+      const updateGoalsForm = () => {
+        const g = goals || getDefaultGoals();
+        goalCalInput.value = g.cal;
+        goalProteinInput.value = g.protein;
+        goalCarbsInput.value = g.carbs;
+        goalFatInput.value = g.fat;
+      };
+
+      goalsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Save for *today only* (resets every day since each date stores its own goals)
+        goals = {
+          cal: Number(goalCalInput.value) || 0,
+          protein: Number(goalProteinInput.value) || 0,
+          carbs: Number(goalCarbsInput.value) || 0,
+          fat: Number(goalFatInput.value) || 0,
+        };
+        updateMacroBars();
+        updateSuggestions();
+        if (isSameDay(viewedDate, new Date())) saveState();
+        showToast('Today\'s goals saved.', false);
+      });
+
+      // ----------------------- EVENTS -----------------------
+      const safeTrim = (v) => (v || '').toString().trim();
+
+      foodForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const query = safeTrim(foodInput.value);
+        if (!query) return;
+        toggleLoading(foodForm, true);
+        const data = await fetchNutritionixData('nutrients', query);
+        toggleLoading(foodForm, false);
+        if (data && data.foods) {
+          data.foods.forEach(food => {
+            const name = `${food.serving_qty ?? ''} ${food.serving_unit ?? ''} ${food.food_name ?? ''}`.replace(/\s+/g, ' ').trim();
+            foodLog.push({
+              id: Date.now() + Math.random(),
+              name,
+              calories: +food.nf_calories || 0,
+              protein: +food.nf_protein || 0,
+              carbs: +food.nf_total_carbohydrate || 0,
+              fat: +food.nf_total_fat || 0,
+            });
+          });
+          renderLogs();
+          foodInput.value = '';
+        }
+      });
+
+      exerciseForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const query = safeTrim(exerciseInput.value);
+        if (!query) return;
+        toggleLoading(exerciseForm, true);
+        const data = await fetchNutritionixData('exercise', query);
+        toggleLoading(exerciseForm, false);
+        if (data && data.exercises) {
+          data.exercises.forEach(ex => {
+            const title = `${(ex.name || '').replace(/^./, c => c.toUpperCase())} for ${ex.duration_min ?? 0} min`;
+            exerciseLog.push({ id: Date.now() + Math.random(), name: title, calories: +ex.nf_calories || 0 });
+          });
+          renderLogs();
+          exerciseInput.value = '';
+        }
+      });
+
+      document.body.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-action="delete"]');
+        if (!btn) return;
+        if (!isSameDay(viewedDate, new Date())) return; // safeguard
+        const type = btn.dataset.type;
+        const li = btn.closest('li');
+        if (!li) return;
+        const id = parseFloat(li.dataset.id);
+        if (type === 'food') foodLog = foodLog.filter(x => x.id !== id);
+        else exerciseLog = exerciseLog.filter(x => x.id !== id);
+        renderLogs();
+      });
+
+      goToTodayBtn.addEventListener('click', () => loadDataForDate(new Date()));
+
+      // History Modal Events
+      historyBtn.addEventListener('click', () => { calendarDate = new Date(viewedDate); renderCalendar(); historyModal.classList.remove('hidden'); });
+      closeHistoryBtn.addEventListener('click', () => historyModal.classList.add('hidden'));
+      prevMonthBtn.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCalendar(); });
+      nextMonthBtn.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCalendar(); });
+      calendarGrid.addEventListener('click', (e) => {
+        const dayEl = e.target.closest('[data-date]');
+        if (!dayEl) return;
+        const [y, m, d] = dayEl.dataset.date.split('-').map(Number);
+        loadDataForDate(new Date(y, m - 1, d));
+        historyModal.classList.add('hidden');
+      });
+
+      // ----------------------- INIT -----------------------
+      loadState();
+    });
+  </script>
+
+<!-- Lazy-load AdSense: inserted by patched files -->
+<script>
+  (function() {
+    function initAds() {
+      document.querySelectorAll('ins.adsbygoogle').forEach(function(adEl) {
+        if (!adEl.dataset.adInitialized) {
+          try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            adEl.dataset.adInitialized = '1';
+          } catch (e) {
+            // console.warn('Ads not initialized', e);
+          }
+        }
+      });
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            initAds();
+            io.disconnect();
+          }
+        });
+      }, { rootMargin: '200px' });
+      document.querySelectorAll('ins.adsbygoogle').forEach(function(el) { io.observe(el); });
+    } else {
+      // fallback
+      window.addEventListener('load', initAds);
+    }
+  })();
+</script>
+
+</body>
+</html>
