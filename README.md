@@ -39,40 +39,4 @@ It integrates with the **Nutritionix API** via a secure backend proxy — ensuri
 git clone https://github.com/<lalitmohan-mekap>/balancefit.git
 cd balancefit
 
----
-
-## 🧱 API Architecture
-
-           ┌─────────────────────┐
-        │     User Device     │
-        │  (Browser / Phone)  │
-        └─────────┬───────────┘
-                  │
-                  ▼
-        ┌─────────────────────┐
-        │  BalanceFit Frontend│
-        │   (HTML, JS, CSS)   │
-        └─────────┬───────────┘
-                  │  Fetches data securely
-                  ▼
-        ┌─────────────────────┐
-        │ BalanceFit Backend  │
-        │ (Express + Helmet)  │
-        │   • Uses env vars   │
-        │   • Calls Nutritionix│
-        │   • Hides API keys  │
-        └─────────┬───────────┘
-                  │
-                  ▼
-        ┌─────────────────────┐
-        │  Nutritionix API    │
-        │ (External Provider) │
-        └─────────────────────┘
-
-**
-🧠 This structure ensures your API credentials are never visible to the frontend or end users.
-All API calls go through your secure Express proxy hosted on Render.
-
-
-
 
