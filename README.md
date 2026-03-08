@@ -10,6 +10,10 @@ BalanceFit is a daily nutrition and workout tracker with:
 
 The app uses a backend proxy so your API key stays on the server.
 
+## Live Demo
+
+https://balancefit-api.onrender.com/
+
 ## Latest Updates
 
 - Replaced Nutritionix flow with GPT-compatible API parsing
