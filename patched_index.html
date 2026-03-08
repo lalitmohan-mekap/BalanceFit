@@ -5,11 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BalanceFit - Fitness Tracker</title>
   <!-- Tailwind (CDN) -->
+<<<<<<< HEAD
+=======
+  <!-- Google AdSense -->
+  <!-- SERVER_INJECT:ADSENSE_SCRIPT -->
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
 
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<<<<<<< HEAD
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest" defer></script>
 
@@ -452,15 +458,40 @@
         <span class="theme-label text-xs font-semibold tracking-wide">Theme</span>
       </button>
       <!-- History Button -->
+=======
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .gradient-text { background: linear-gradient(to right, #6EE7B7, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .toast { transition: opacity 0.3s, transform 0.3s; }
+    /* Calendar grid helper (avoid Tailwind @apply in <style>) */
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.5rem; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <!-- Main Container -->
+  <div class="container mx-auto max-w-4xl p-4 sm:p-6 md:p-8 relative">
+
+    <!-- History Button -->
+    <div class="absolute top-4 right-4">
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
       <button id="history-btn" class="text-slate-500 hover:text-sky-500 p-2 rounded-full bg-white shadow-md hover:shadow-lg transition" aria-label="Open history calendar">
         <i data-lucide="calendar-days" class="w-6 h-6"></i>
       </button>
     </div>
 
     <!-- Header -->
+<<<<<<< HEAD
     <header class="app-header text-center mb-6">
       <h1 class="text-4xl md:text-5xl font-bold gradient-text">BalanceFit</h1>
       <p class="mt-2">Your daily partner in wellness.</p>
+=======
+    <header class="text-center mb-6">
+      <h1 class="text-4xl md:text-5xl font-bold gradient-text">BalanceFit</h1>
+      <p class="text-slate-500 mt-2">Your daily partner in wellness.</p>
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
     </header>
 
     <!-- Date Display -->
@@ -469,6 +500,27 @@
       <button id="go-to-today-btn" class="text-sm text-sky-600 hover:underline hidden" type="button">Back to Today</button>
     </div>
 
+<<<<<<< HEAD
+=======
+
+    <!-- Ad: Advertisement -->
+    <div class="my-6 flex justify-center">
+      <div class="w-full max-w-4xl">
+        <div class="text-center text-[10px] uppercase tracking-widest text-slate-400 mb-1">Advertisement</div>
+        <div class="bg-white rounded-xl shadow-sm p-2 border border-slate-100 ">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+               data-ad-slot="0000000001"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      </div>
+    </div>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
         <!-- Goals Panel (resets every day) -->
     <section class="bg-white p-4 md:p-5 rounded-2xl shadow-md mb-6">
       <div class="flex items-center justify-between mb-3">
@@ -560,14 +612,42 @@
       </div>
     </section>
 
+<<<<<<< HEAD
+=======
+    <!-- Ad: Advertisement -->
+    <div class="my-6 flex justify-center">
+      <div class="w-full max-w-4xl">
+        <div class="text-center text-[10px] uppercase tracking-widest text-slate-400 mb-1">Advertisement</div>
+        <div class="bg-white rounded-xl shadow-sm p-2 border border-slate-100 ">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+               data-ad-slot="0000000002"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      </div>
+    </div>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    
+
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
     <!-- Logging Section -->
     <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Food Log -->
       <div class="bg-white p-6 rounded-2xl shadow-md">
         <h3 class="text-2xl font-bold mb-4 text-emerald-600">Food Log</h3>
+<<<<<<< HEAD
         <form id="food-form" class="log-entry-form mb-4" autocomplete="off">
           <input type="text" id="food-input" placeholder="e.g., 1 apple and 2 eggs" required class="p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none transition" />
           <button type="submit" class="log-submit-btn bg-emerald-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-emerald-600 transition shadow-sm hover:shadow-md flex items-center justify-center">
+=======
+        <form id="food-form" class="flex flex-col sm:flex-row gap-3 mb-4" autocomplete="off">
+          <input type="text" id="food-input" placeholder="e.g., 1 apple and 2 eggs" required class="flex-grow p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none transition" />
+          <button type="submit" class="bg-emerald-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-emerald-600 transition shadow-sm hover:shadow-md flex items-center justify-center min-w-[140px]">
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
             <span class="btn-text">Add Food</span>
             <svg class="animate-spin h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
           </button>
@@ -578,9 +658,15 @@
       <!-- Exercise Log -->
       <div class="bg-white p-6 rounded-2xl shadow-md">
         <h3 class="text-2xl font-bold mb-4 text-sky-600">Exercise Log</h3>
+<<<<<<< HEAD
         <form id="exercise-form" class="log-entry-form mb-4" autocomplete="off">
           <input type="text" id="exercise-input" placeholder="e.g., ran for 30 minutes" required class="p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-sky-400 focus:outline-none transition" />
           <button type="submit" class="log-submit-btn bg-sky-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-sky-600 transition shadow-sm hover:shadow-md flex items-center justify-center">
+=======
+        <form id="exercise-form" class="flex flex-col sm:flex-row gap-3 mb-4" autocomplete="off">
+          <input type="text" id="exercise-input" placeholder="e.g., ran for 30 minutes" required class="flex-grow p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-sky-400 focus:outline-none transition" />
+          <button type="submit" class="bg-sky-500 text-white font-semibold px-6 py-3 rounded-lg hover:bg-sky-600 transition shadow-sm hover:shadow-md flex items-center justify-center min-w-[160px]">
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
             <span class="btn-text">Add Workout</span>
             <svg class="animate-spin h-5 w-5 text-white hidden btn-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
           </button>
@@ -596,11 +682,36 @@
         <p>Log your first meal or workout to get personalized suggestions!</p>
       </div>
     </section>
+<<<<<<< HEAD
+=======
+
+    <!-- Ad: Advertisement -->
+    <div class="my-6 flex justify-center">
+      <div class="w-full max-w-4xl">
+        <div class="text-center text-[10px] uppercase tracking-widest text-slate-400 mb-1">Advertisement</div>
+        <div class="bg-white rounded-xl shadow-sm p-2 border border-slate-100 ">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+               data-ad-slot="0000000003"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
+      </div>
+    </div>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
       </div>
 
   <!-- History Modal -->
   <div id="history-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 hidden">
+<<<<<<< HEAD
     <div class="modal-card bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg">
+=======
+    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg">
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
       <div class="flex items-center justify-between mb-4">
         <button id="prev-month-btn" class="p-2 rounded-full hover:bg-slate-100" type="button" aria-label="Previous month">
           <i data-lucide="chevron-left"></i>
@@ -610,7 +721,11 @@
           <i data-lucide="chevron-right"></i>
         </button>
       </div>
+<<<<<<< HEAD
       <div class="calendar-weekdays grid grid-cols-7 gap-2 mb-4 text-center text-xs text-slate-500 font-semibold">
+=======
+      <div class="grid grid-cols-7 gap-2 mb-4 text-center text-xs text-slate-500 font-semibold">
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
         <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
       </div>
       <div id="calendar-grid" class="calendar-grid"></div>
@@ -648,7 +763,10 @@
       const toastMessage = document.getElementById('toast-message');
       const dateDisplay = document.getElementById('date-display');
       const goToTodayBtn = document.getElementById('go-to-today-btn');
+<<<<<<< HEAD
       const themeToggleBtn = document.getElementById('theme-toggle-btn');
+=======
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
 
       // Goals elements
       const goalsForm = document.getElementById('goals-form');
@@ -699,6 +817,7 @@
         }
       };
 
+<<<<<<< HEAD
       const THEME_STORAGE_KEY = 'balanceFitTheme';
       const applyTheme = (theme) => {
         const dark = theme === 'dark';
@@ -718,6 +837,8 @@
         applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
       };
 
+=======
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
       // ----------------------- STORAGE -----------------------
       const getDefaultGoals = () => ({ cal: 2000, protein: 120, carbs: 250, fat: 70 });
 
@@ -754,9 +875,15 @@
       };
 
       // ----------------------- API -----------------------
+<<<<<<< HEAD
       const fetchNutritionData = async (endpoint, query) => {
         try {
           const res = await fetch(`/api/gpt/natural/${endpoint}` , {
+=======
+      const fetchNutritionixData = async (endpoint, query) => {
+        try {
+          const res = await fetch(`/api/nx/natural/${endpoint}` , {
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query })
@@ -963,7 +1090,11 @@
         const query = safeTrim(foodInput.value);
         if (!query) return;
         toggleLoading(foodForm, true);
+<<<<<<< HEAD
         const data = await fetchNutritionData('nutrients', query);
+=======
+        const data = await fetchNutritionixData('nutrients', query);
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
         toggleLoading(foodForm, false);
         if (data && data.foods) {
           data.foods.forEach(food => {
@@ -987,7 +1118,11 @@
         const query = safeTrim(exerciseInput.value);
         if (!query) return;
         toggleLoading(exerciseForm, true);
+<<<<<<< HEAD
         const data = await fetchNutritionData('exercise', query);
+=======
+        const data = await fetchNutritionixData('exercise', query);
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
         toggleLoading(exerciseForm, false);
         if (data && data.exercises) {
           data.exercises.forEach(ex => {
@@ -1027,6 +1162,7 @@
         historyModal.classList.add('hidden');
       });
 
+<<<<<<< HEAD
       themeToggleBtn && themeToggleBtn.addEventListener('click', () => {
         const isDark = document.body.classList.contains('dark-theme');
         const nextTheme = isDark ? 'light' : 'dark';
@@ -1036,9 +1172,50 @@
 
       // ----------------------- INIT -----------------------
       initTheme();
+=======
+      // ----------------------- INIT -----------------------
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
       loadState();
     });
   </script>
 
+<<<<<<< HEAD
 </body>
 </html>
+=======
+<!-- Lazy-load AdSense: inserted by patched files -->
+<script>
+  (function() {
+    function initAds() {
+      document.querySelectorAll('ins.adsbygoogle').forEach(function(adEl) {
+        if (!adEl.dataset.adInitialized) {
+          try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            adEl.dataset.adInitialized = '1';
+          } catch (e) {
+            // console.warn('Ads not initialized', e);
+          }
+        }
+      });
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            initAds();
+            io.disconnect();
+          }
+        });
+      }, { rootMargin: '200px' });
+      document.querySelectorAll('ins.adsbygoogle').forEach(function(el) { io.observe(el); });
+    } else {
+      // fallback
+      window.addEventListener('load', initAds);
+    }
+  })();
+</script>
+
+</body>
+</html>
+>>>>>>> 2cf63195cc3ecd3148b4620b9ee0de17cd2d54fd
